@@ -1,4 +1,134 @@
-# GearGuard - Maintenance Tracking Application
+# GearGuard — Maintenance Tracking (Local Setup)
+
+This repository contains the GearGuard maintenance tracking application (Next.js + Prisma + SQLite).
+
+The instructions below explain how to create the database, run migrations, seed sample data, and start the app locally so you can push this repository to GitHub and others can reproduce your environment.
+
+## Prerequisites
+
+- Node.js 18 or newer
+- npm (or yarn / pnpm)
+- Git (optional)
+
+## Files to check
+
+- `prisma/schema.prisma` — Prisma schema (models and SQLite datasource)
+- `prisma/seed.ts` — TypeScript seed script that inserts sample data
+- API endpoints under `pages/api/*`
+
+## Environment variables
+
+Create a `.env` file at the repository root (do NOT commit secrets). Example values:
+
+```
+DATABASE_URL="file:./dev.db"
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+JWT_SECRET="change_this_to_a_secure_random_value"
+```
+
+If you prefer, create `.env.example` with the same keys (without real secrets) and copy it to `.env`.
+
+## Install dependencies
+
+From the project root:
+
+```bash
+npm install
+# or: yarn install
+# or: pnpm install
+```
+
+## Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+## Create / migrate the database
+
+For local development you can use Prisma migrations which will create the SQLite file and apply schema changes.
+
+1) Create the initial migration and apply it (recommended for development):
+
+```bash
+npx prisma migrate dev --name init
+```
+
+If you already have migrations or prefer pushing schema directly (non-migration approach):
+
+```bash
+npx prisma db push
+```
+
+Note: The project uses SQLite by default (`DATABASE_URL="file:./dev.db"`). The DB file will be created in the repository root.
+
+## Seed the database (sample data)
+
+The repository includes `prisma/seed.ts` to populate the database with sample (Indian) names, equipment, teams, and maintenance requests.
+
+Run the seed script:
+
+```bash
+npx ts-node prisma/seed.ts
+```
+
+If `ts-node` is not installed globally, ensure it is in `devDependencies` or run:
+
+```bash
+npm install -D ts-node typescript @types/node
+npx ts-node prisma/seed.ts
+```
+
+After seeding you should see console output confirming created records.
+
+## Run the app (development)
+
+```bash
+npm run dev
+# or: yarn dev
+# visit: http://localhost:3000
+```
+
+## Build and run (production-like)
+
+```bash
+npm run build
+npm start
+```
+
+## Common commands (summary)
+
+```bash
+# install deps
+npm install
+
+# generate Prisma client
+npx prisma generate
+
+# apply migrations
+npx prisma migrate dev --name init
+
+# seed DB
+npx ts-node prisma/seed.ts
+
+# run locally
+npm run dev
+```
+
+## Troubleshooting
+
+- If `npx prisma migrate dev` fails because of existing schema changes, try `npx prisma db push` to sync the schema without creating a migration.
+- If `npx ts-node prisma/seed.ts` errors about TS config, ensure `ts-node` and `typescript` are installed as dev dependencies.
+- If you change `DATABASE_URL` to a different engine (Postgres/MySQL), update `prisma/schema.prisma` datasource accordingly and run `npx prisma migrate dev`.
+
+## Notes for GitHub
+
+- Add `.env` to `.gitignore` before pushing.
+- Optionally add `.env.example` with the keys used in this README so contributors know what variables to set.
+
+---
+
+If you want, I can also create a `.env.example` file and add a short GitHub Actions workflow to run `prisma migrate deploy` and `npm run build` on push.# GearGuard - Maintenance Tracking Application
 
 A comprehensive maintenance equipment tracking and management system built with Next.js, TypeScript, and SQLite. GearGuard helps organizations efficiently manage equipment maintenance, track technician workload, and monitor maintenance requests.
 
