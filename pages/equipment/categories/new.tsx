@@ -76,8 +76,8 @@ const NewCategory = () => {
                 marginBottom: '8px',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                color: item.active ? '#8b7ba8' : '#666',
-                backgroundColor: item.active ? '#f0ecf7' : 'transparent',
+                color: item.active ? '#714B67' : '#666',
+                backgroundColor: item.active ? '#f3eef8' : 'transparent',
                 fontSize: '14px',
                 fontWeight: item.active ? '600' : '500',
                 gap: '10px',
@@ -116,7 +116,7 @@ const NewCategory = () => {
             />
             <div style={{ fontSize: '20px' }}>🔔</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '35px', height: '35px', backgroundColor: '#8b7ba8', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
+              <div style={{ width: '35px', height: '35px', backgroundColor: '#714B67', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
                 {userName.charAt(0).toUpperCase()}
               </div>
               <span style={{ fontSize: '14px', color: '#333' }}>{userName}</span>
@@ -220,7 +220,7 @@ const NewCategory = () => {
                   type="submit"
                   style={{
                     padding: '12px 30px',
-                    backgroundColor: '#8b7ba8',
+                    backgroundColor: '#714B67',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '4px',

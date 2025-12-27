@@ -89,7 +89,7 @@ const Login = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '20px' }}>
       <div style={{ width: '100%', maxWidth: '450px', padding: '40px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)', backgroundColor: '#fff' }}>
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <div style={{ width: '60px', height: '60px', margin: '0 auto 15px', backgroundColor: '#8b7ba8', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '60px', height: '60px', margin: '0 auto 15px', backgroundColor: '#714B67', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: '32px' }}>⚙️</span>
           </div>
           <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 8px 0' }}>GearGuard</h1>
@@ -158,7 +158,7 @@ const Login = () => {
               width: '100%',
               padding: '12px',
               borderRadius: '6px',
-              backgroundColor: loading ? '#9c8fb0' : '#8b7ba8',
+              backgroundColor: loading ? '#8b6280' : '#714B67',
               color: '#fff',
               fontWeight: '600',
               fontSize: '14px',
@@ -173,13 +173,13 @@ const Login = () => {
 
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
-            <Link href="/forgot-password" style={{ color: '#8b7ba8', textDecoration: 'none', fontWeight: '500' }}>
+            <Link href="/forgot-password" style={{ color: '#714B67', textDecoration: 'none', fontWeight: '500' }}>
               Forgot password?
             </Link>
           </p>
           <p style={{ fontSize: '14px', color: '#666' }}>
             Don't have an account?{' '}
-            <Link href="/signup" style={{ color: '#8b7ba8', textDecoration: 'none', fontWeight: '500' }}>
+            <Link href="/signup" style={{ color: '#714B67', textDecoration: 'none', fontWeight: '500' }}>
               Sign up here
             </Link>
           </p>

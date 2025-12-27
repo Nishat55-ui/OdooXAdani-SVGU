@@ -56,7 +56,7 @@ const Maintenance = () => {
   };
 
   const getTypeColor = (type: string) => {
-    return type === 'Preventive' ? '#8b7ba8' : '#e74c3c';
+    return type === 'Preventive' ? '#714B67' : '#e74c3c';
   };
 
   const getTypeLabel = (type: string) => {
@@ -85,6 +85,7 @@ const Maintenance = () => {
             { icon: '📊', label: 'Dashboard', href: '/dashboard' },
             { icon: '⚙️', label: 'Equipment', href: '/equipment' },
             { icon: '🔧', label: 'Maintenance', href: '/maintenance', active: true },
+            { icon: '🏭', label: 'Work Centers', href: '/workcenters' },
             { icon: '👥', label: 'Teams', href: '/equipment/teams' },
             { icon: '📅', label: 'Calendar', href: '/calendar' },
             { icon: '📈', label: 'Reports', href: '/reports' },
@@ -99,8 +100,8 @@ const Maintenance = () => {
                 marginBottom: '8px',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                color: item.active ? '#8b7ba8' : '#666',
-                backgroundColor: item.active ? '#f0ecf7' : 'transparent',
+                color: item.active ? '#714B67' : '#666',
+                backgroundColor: item.active ? '#f3eef8' : 'transparent',
                 fontSize: '14px',
                 fontWeight: item.active ? '600' : '500',
                 gap: '10px',
@@ -126,6 +127,24 @@ const Maintenance = () => {
         }}>
           <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a1a1a', margin: '0' }}>Maintenance Requests</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <Link
+              href="/maintenance/new"
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#714B67',
+                color: '#fff',
+                textDecoration: 'none',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                display: 'inline-block',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#5a3b54')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#714B67')}
+            >
+              + New Request
+            </Link>
             <input
               type="text"
               placeholder="Search..."
@@ -139,7 +158,7 @@ const Maintenance = () => {
             />
             <div style={{ fontSize: '20px' }}>🔔</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '35px', height: '35px', backgroundColor: '#8b7ba8', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
+              <div style={{ width: '35px', height: '35px', backgroundColor: '#714B67', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
                 {userName.charAt(0).toUpperCase()}
               </div>
               <span style={{ fontSize: '14px', color: '#333' }}>{userName}</span>
@@ -307,7 +326,7 @@ const Maintenance = () => {
           {/* New Request Button */}
           <button style={{
             padding: '12px 24px',
-            backgroundColor: '#8b7ba8',
+            backgroundColor: '#714B67',
             color: '#fff',
             border: 'none',
             borderRadius: '6px',

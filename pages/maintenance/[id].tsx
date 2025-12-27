@@ -200,8 +200,8 @@ const MaintenanceDetail = () => {
                 marginBottom: '8px',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                color: item.active ? '#8b7ba8' : '#666',
-                backgroundColor: item.active ? '#f0ecf7' : 'transparent',
+                color: item.active ? '#714B67' : '#666',
+                backgroundColor: item.active ? '#f3eef8' : 'transparent',
                 fontSize: '14px',
                 fontWeight: item.active ? '600' : '500',
                 gap: '10px',
@@ -240,7 +240,7 @@ const MaintenanceDetail = () => {
             />
             <div style={{ fontSize: '20px' }}>🔔</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '35px', height: '35px', backgroundColor: '#8b7ba8', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
+              <div style={{ width: '35px', height: '35px', backgroundColor: '#714B67', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>
                 {userName.charAt(0).toUpperCase()}
               </div>
               <span style={{ fontSize: '14px', color: '#333' }}>{userName}</span>
@@ -298,7 +298,7 @@ const MaintenanceDetail = () => {
               onClick={() => setIsEditMode(true)}
               style={{
                 padding: '8px 16px',
-                backgroundColor: '#8b7ba8',
+                backgroundColor: '#714B67',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '6px',
@@ -660,7 +660,7 @@ const MaintenanceDetail = () => {
                   onClick={handleSave}
                   style={{
                     padding: '10px 25px',
-                    backgroundColor: '#8b7ba8',
+                    backgroundColor: '#714B67',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '6px',
@@ -899,8 +899,8 @@ const MaintenanceDetail = () => {
                       padding: '12px 0',
                       border: 'none',
                       backgroundColor: 'transparent',
-                      borderBottom: activeTab === tab ? '3px solid #8b7ba8' : 'none',
-                      color: activeTab === tab ? '#8b7ba8' : '#999',
+                      borderBottom: activeTab === tab ? '3px solid #714B67' : 'none',
+                      color: activeTab === tab ? '#714B67' : '#999',
                       fontWeight: activeTab === tab ? '600' : '500',
                       fontSize: '14px',
                       cursor: 'pointer',

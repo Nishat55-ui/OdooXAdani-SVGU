@@ -20,19 +20,19 @@ const Calendar = () => {
   }, []);
 
   const teams = [
-    { name: 'Mechanics', color: '#8b5d9f' },
+    { name: 'Mechanics', color: '#714B67' },
     { name: 'IT Support', color: '#3b5bdb' },
     { name: 'HVAC', color: '#27ae60' },
     { name: 'Electricians', color: '#f39c12' },
   ];
 
   const events = [
-    { date: 5, title: 'Monthly Checkup', team: 'Mechanics', color: '#8b5d9f' },
-    { date: 8, title: 'Filter Replacement', team: 'Mechanics', color: '#8b5d9f' },
+    { date: 5, title: 'Monthly Checkup', team: 'Mechanics', color: '#714B67' },
+    { date: 8, title: 'Filter Replacement', team: 'Mechanics', color: '#714B67' },
     { date: 12, title: 'AC Maintenance', team: 'HVAC', color: '#27ae60' },
     { date: 15, title: 'Server Checkup', team: 'IT Support', color: '#3b5bdb' },
-    { date: 18, title: 'Belt Inspection', team: 'Mechanics', color: '#8b5d9f' },
-    { date: 22, title: 'Oil Change', team: 'Mechanics', color: '#8b5d9f' },
+    { date: 18, title: 'Belt Inspection', team: 'Mechanics', color: '#714B67' },
+    { date: 22, title: 'Oil Change', team: 'Mechanics', color: '#714B67' },
     { date: 25, title: 'Printer Maintenance', team: 'IT Support', color: '#3b5bdb' },
   ];
 
@@ -102,8 +102,8 @@ const Calendar = () => {
                 marginBottom: '8px',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                color: item.active ? '#8b7ba8' : '#666',
-                backgroundColor: item.active ? '#f0ecf7' : 'transparent',
+                color: item.active ? '#714B67' : '#666',
+                backgroundColor: item.active ? '#f3eef8' : 'transparent',
                 fontSize: '14px',
                 fontWeight: item.active ? '600' : '500',
                 gap: '10px',
@@ -142,7 +142,7 @@ const Calendar = () => {
             />
             <div style={{ fontSize: '20px' }}>🔔</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '35px', height: '35px', backgroundColor: '#8b7ba8', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>{userName.charAt(0).toUpperCase()}</div>
+              <div style={{ width: '35px', height: '35px', backgroundColor: '#714B67', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', fontWeight: '700' }}>{userName.charAt(0).toUpperCase()}</div>
               <span style={{ fontSize: '14px', color: '#333' }}>{userName}</span>
             </div>
           </div>
@@ -203,7 +203,7 @@ const Calendar = () => {
               </div>
               <button style={{
                 padding: '10px 20px',
-                backgroundColor: '#8b7ba8',
+                backgroundColor: '#714B67',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '6px',
