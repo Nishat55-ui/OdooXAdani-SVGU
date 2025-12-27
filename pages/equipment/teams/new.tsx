@@ -7,14 +7,15 @@ import { useRouter } from 'next/router';
 const NewTeam = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('User');
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     teamName: '',
-    members: [''],
+    members: [{ name: '', isCustom: false }],
     company: '',
   });
 
   const companies = ['TechCorp Industries', 'Precision Manufacturing Ltd', 'Global Solutions Inc', 'Advanced Systems Corp', 'Innovation Labs', 'Digital Enterprises'];
-  const availableMembers = ['Anas Makari', 'Marc Demo', 'Maggie Davidson', 'Mitchell Admin', 'Aka Foster', 'John Smith', 'Sarah Johnson', 'David Lee', 'Emma Wilson', 'Robert Brown'];
+  const availableMembers = ['Rajesh Kumar', 'Priya Singh', 'Amit Patel', 'Vikram Sharma', 'Anjali Desai', 'Rohan Gupta', 'Deepak Kumar', 'Neha Singh', 'Arjun Reddy', 'Kavya Nair'];
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -36,9 +37,9 @@ const NewTeam = () => {
     }));
   };
 
-  const handleMemberChange = (index: number, value: string) => {
+  const handleMemberChange = (index: number, value: string, isCustom: boolean = false) => {
     const newMembers = [...formData.members];
-    newMembers[index] = value;
+    newMembers[index] = { name: value, isCustom };
     setFormData((prev) => ({
       ...prev,
       members: newMembers,
@@ -48,7 +49,7 @@ const NewTeam = () => {
   const addMember = () => {
     setFormData((prev) => ({
       ...prev,
-      members: [...prev.members, ''],
+      members: [...prev.members, { name: '', isCustom: false }],
     }));
   };
 
@@ -61,8 +62,52 @@ const NewTeam = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('New Team:', formData);
-    router.push('/equipment/teams');
+
+    // Validation
+    if (!formData.teamName.trim()) {
+      alert('Team name is required');
+      return;
+    }
+    if (!formData.company) {
+      alert('Company is required');
+      return;
+    }
+
+    const filteredMembers = formData.members.filter(m => m.name.trim());
+    if (filteredMembers.length === 0) {
+      alert('At least one team member is required');
+      return;
+    }
+
+    setLoading(true);
+
+    // Submit to API
+    fetch('/api/teams', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.teamName,
+        members: filteredMembers.map(m => m.name),
+        company: formData.company,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          alert(`Error: ${data.error}`);
+          setLoading(false);
+        } else {
+          alert(`Team "${data.name}" created successfully!`);
+          router.push('/equipment/teams');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to create team');
+        setLoading(false);
+      });
   };
 
   return (
@@ -160,7 +205,7 @@ const NewTeam = () => {
               {/* Team Name */}
               <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                  Team Name?
+                  Team Name<span style={{ color: '#e74c3c' }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -184,7 +229,7 @@ const NewTeam = () => {
               {/* Company */}
               <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                  Company?
+                  Company<span style={{ color: '#e74c3c' }}>*</span>
                 </label>
                 <select
                   name="company"
@@ -212,15 +257,65 @@ const NewTeam = () => {
               {/* Team Members */}
               <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '15px' }}>
-                  Team Members?
+                  Team Members<span style={{ color: '#e74c3c' }}>*</span>
                 </label>
                 {formData.members.map((member, index) => (
-                  <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '12px' }}>
-                    <select
-                      value={member}
-                      onChange={(e) => handleMemberChange(index, e.target.value)}
+                  <div key={index} style={{ marginBottom: '18px' }}>
+                    {/* Dropdown for selecting from available members */}
+                    <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666', fontWeight: '500' }}>
+                      Select from available technicians
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '12px' }}>
+                      <select
+                        value={!member.isCustom ? member.name : ''}
+                        onChange={(e) => handleMemberChange(index, e.target.value, false)}
+                        style={{
+                          flex: 1,
+                          padding: '10px 0px',
+                          border: 'none',
+                          borderBottom: '2px solid #e0e0e0',
+                          fontSize: '14px',
+                          boxSizing: 'border-box',
+                          outline: 'none',
+                          backgroundColor: 'transparent',
+                        }}
+                      >
+                        <option value="">Select Member</option>
+                        {availableMembers.map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                      {formData.members.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeMember(index)}
+                          style={{
+                            padding: '8px 12px',
+                            backgroundColor: '#f5f5f5',
+                            color: '#e74c3c',
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '4px',
+                            fontWeight: '600',
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                    
+                    {/* Custom Name Input */}
+                    <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666', fontWeight: '500' }}>
+                      Or enter custom technician name
+                    </div>
+                    <input
+                      type="text"
+                      value={member.isCustom ? member.name : ''}
+                      onChange={(e) => handleMemberChange(index, e.target.value, true)}
+                      placeholder="Enter technician name not in list"
                       style={{
-                        flex: 1,
+                        width: '100%',
                         padding: '10px 0px',
                         border: 'none',
                         borderBottom: '2px solid #e0e0e0',
@@ -229,30 +324,7 @@ const NewTeam = () => {
                         outline: 'none',
                         backgroundColor: 'transparent',
                       }}
-                    >
-                      <option value="">Select Member</option>
-                      {availableMembers.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                    {formData.members.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeMember(index)}
-                        style={{
-                          padding: '8px 12px',
-                          backgroundColor: '#f5f5f5',
-                          color: '#e74c3c',
-                          border: '1px solid #e0e0e0',
-                          borderRadius: '4px',
-                          fontWeight: '600',
-                          fontSize: '12px',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Remove
-                      </button>
-                    )}
+                    />
                   </div>
                 ))}
                 <button

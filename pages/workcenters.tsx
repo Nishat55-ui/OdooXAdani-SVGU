@@ -20,63 +20,7 @@ export default function WorkCenters() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userName, setUserName] = useState('User');
-  const [workcenters, setWorkcenters] = useState<WorkCenter[]>([
-    {
-      id: '1',
-      name: 'Assembly 1',
-      code: 'ASM-001',
-      tag: 'High Volume',
-      alternativeWorkcenters: 'Assembly 2, Assembly 3',
-      costPerHour: 100.00,
-      capacityTimeEfficiency: 34.59,
-      oeeTarget: 85,
-      company: 'TechCorp Industries',
-    },
-    {
-      id: '2',
-      name: 'Drill 1',
-      code: 'DRL-001',
-      tag: 'Precision',
-      alternativeWorkcenters: 'Drill 2',
-      costPerHour: 100.00,
-      capacityTimeEfficiency: 90.00,
-      oeeTarget: 88,
-      company: 'Precision Manufacturing Ltd',
-    },
-    {
-      id: '3',
-      name: 'Welding Center A',
-      code: 'WLD-001',
-      tag: 'Heavy Duty',
-      alternativeWorkcenters: 'Welding Center B',
-      costPerHour: 150.00,
-      capacityTimeEfficiency: 78.50,
-      oeeTarget: 82,
-      company: 'Global Solutions Inc',
-    },
-    {
-      id: '4',
-      name: 'CNC Machine Center',
-      code: 'CNC-001',
-      tag: 'Computer Controlled',
-      alternativeWorkcenters: 'CNC-002, CNC-003',
-      costPerHour: 200.00,
-      capacityTimeEfficiency: 92.30,
-      oeeTarget: 90,
-      company: 'Advanced Systems Corp',
-    },
-    {
-      id: '5',
-      name: 'Packaging Station',
-      code: 'PKG-001',
-      tag: 'Automated',
-      alternativeWorkcenters: 'Packaging Station 2',
-      costPerHour: 75.00,
-      capacityTimeEfficiency: 95.00,
-      oeeTarget: 92,
-      company: 'Innovation Labs',
-    },
-  ]);
+  const [workcenters, setWorkcenters] = useState<WorkCenter[]>([]);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -90,7 +34,22 @@ export default function WorkCenters() {
         setUserName('User');
       }
     }
+
+    // Fetch workcenters from API
+    fetchWorkcenters();
   }, [router]);
+
+  const fetchWorkcenters = async () => {
+    try {
+      const response = await fetch('/api/workcenters');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setWorkcenters(data);
+      }
+    } catch (error) {
+      console.error('Error fetching workcenters:', error);
+    }
+  };
 
   const navigationItems = [
     { icon: '📊', label: 'Dashboard', href: '/dashboard', active: false },
@@ -173,7 +132,27 @@ export default function WorkCenters() {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a1a1a', margin: '0' }}>Work Centers</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a1a1a', margin: '0' }}>Work Centers</h1>
+            <button
+              onClick={() => router.push('/workcenters/new')}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#714B67',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#5a3b54')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#714B67')}
+            >
+              + New Center
+            </button>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <input
               type="text"
@@ -209,29 +188,9 @@ export default function WorkCenters() {
 
         {/* Scrollable Content */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '30px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1a1a1a', margin: '0' }}>
-              All Work Centers
-            </h2>
-            <Link
-              href="/workcenters/new"
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#714B67',
-                color: '#fff',
-                textDecoration: 'none',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: '600',
-                display: 'inline-block',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#5a3b54')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#714B67')}
-            >
-              + New Work Center
-            </Link>
-          </div>
+          <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1a1a1a', margin: '0 0 30px 0' }}>
+            All Work Centers
+          </h2>
 
           {/* Table */}
           <div style={{
@@ -275,7 +234,7 @@ export default function WorkCenters() {
                       )}
                     </td>
                     <td style={{ padding: '15px', fontSize: '13px', color: '#666' }}>{workcenter.alternativeWorkcenters || '—'}</td>
-                    <td style={{ padding: '15px', fontSize: '14px', fontWeight: '600', color: '#714B67' }}>${workcenter.costPerHour.toFixed(2)}</td>
+                    <td style={{ padding: '15px', fontSize: '14px', fontWeight: '600', color: '#714B67' }}>₹{workcenter.costPerHour.toFixed(2)}</td>
                     <td style={{ padding: '15px', fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
                       <div style={{
                         display: 'flex',

@@ -8,6 +8,7 @@ const MaintenanceNew = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('User');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [requestType, setRequestType] = useState<'equipment' | 'workCenter'>('equipment');
   const [formData, setFormData] = useState({
     subject: '',
@@ -64,9 +65,89 @@ const MaintenanceNew = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Maintenance Request Data:', { ...formData, requestType });
-    alert(`Maintenance request created successfully for ${requestType === 'equipment' ? formData.equipment : formData.workCenter}!`);
-    router.push('/maintenance');
+
+    // Validation - Subject is required
+    if (!formData.subject.trim()) {
+      alert('Subject is required');
+      return;
+    }
+
+    // Validation - Equipment or Work Center selection
+    if (requestType === 'equipment' && !formData.equipment.trim()) {
+      alert('Please select equipment');
+      return;
+    }
+    if (requestType === 'workCenter' && !formData.workCenter.trim()) {
+      alert('Please select work center');
+      return;
+    }
+
+    // Validation - Category is required
+    if (!formData.category.trim()) {
+      alert('Category is required');
+      return;
+    }
+
+    // Validation - Team is required
+    if (!formData.team.trim()) {
+      alert('Team is required');
+      return;
+    }
+
+    // Validation - Technician is required
+    if (!formData.technician.trim()) {
+      alert('Technician name is required');
+      return;
+    }
+
+    // Validation - Request date is required
+    if (!formData.requestDate) {
+      alert('Request date is required');
+      return;
+    }
+
+    setLoading(true);
+
+    // Submit to API
+    fetch('/api/maintenance', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        subject: formData.subject,
+        status: 'New',
+        priority: formData.priority,
+        createdBy: userName,
+        team: formData.team,
+        maintenanceFor: requestType === 'equipment' ? 'Equipment' : 'WorkCenter',
+        equipment: requestType === 'equipment' ? formData.equipment : null,
+        workCenter: requestType === 'workCenter' ? formData.workCenter : null,
+        technician: formData.technician,
+        category: formData.category,
+        duration: `${formData.duration}:00 hours`,
+        requestDate: formData.requestDate,
+        maintenanceType: formData.maintenanceType,
+        company: 'Default Company',
+        notes: formData.notes || null,
+        instructions: formData.instructions || null,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          alert(`Error: ${data.error}`);
+          setLoading(false);
+        } else {
+          alert(`Maintenance request created successfully!`);
+          router.push('/maintenance');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to create maintenance request');
+        setLoading(false);
+      });
   };
 
   return (
@@ -209,7 +290,7 @@ const MaintenanceNew = () => {
                   <>
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                        Equipment
+                        Equipment<span style={{ color: '#e74c3c' }}>*</span>
                       </label>
                       <select
                         name="equipment"
@@ -238,7 +319,7 @@ const MaintenanceNew = () => {
                   <>
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                        Work Center
+                        Work Center<span style={{ color: '#e74c3c' }}>*</span>
                       </label>
                       <select
                         name="workCenter"
@@ -270,7 +351,7 @@ const MaintenanceNew = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '25px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Subject
+                    Subject<span style={{ color: '#e74c3c' }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -292,7 +373,7 @@ const MaintenanceNew = () => {
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Category
+                    Category<span style={{ color: '#e74c3c' }}>*</span>
                   </label>
                   <select
                     name="category"
@@ -321,7 +402,7 @@ const MaintenanceNew = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '25px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Request Date
+                    Request Date<span style={{ color: '#e74c3c' }}>*</span>
                   </label>
                   <input
                     type="date"
@@ -375,7 +456,7 @@ const MaintenanceNew = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '25px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Team
+                    Team<span style={{ color: '#e74c3c' }}>*</span>
                   </label>
                   <select
                     name="team"
@@ -400,7 +481,7 @@ const MaintenanceNew = () => {
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Technician
+                    Technician<span style={{ color: '#e74c3c' }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -449,7 +530,7 @@ const MaintenanceNew = () => {
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                    Duration (hours)
+                    Duration (hours) <span style={{ fontSize: '12px', fontWeight: '400', color: '#666' }}>(Optional)</span>
                   </label>
                   <input
                     type="number"
@@ -473,7 +554,7 @@ const MaintenanceNew = () => {
 
               {/* Notes and Instructions Tabs */}
               <div style={{ marginBottom: '25px' }}>
-                <div style={{ display: 'flex', gap: '15px', borderBottom: '2px solid #e0e0e0', marginBottom: '15px' }}>
+                <div style={{ display: 'flex', gap: '15px', borderBottom: '2px solid #e0e0e0', marginBottom: '15px', alignItems: 'center' }}>
                   <button
                     type="button"
                     style={{
@@ -487,7 +568,7 @@ const MaintenanceNew = () => {
                       borderBottom: '3px solid #714B67',
                     }}
                   >
-                    Notes
+                    Notes <span style={{ fontSize: '12px', fontWeight: '400', color: '#666' }}>(Optional)</span>
                   </button>
                   <button
                     type="button"
@@ -501,7 +582,7 @@ const MaintenanceNew = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    Instructions
+                    Instructions <span style={{ fontSize: '12px', fontWeight: '400', color: '#666' }}>(Optional)</span>
                   </button>
                 </div>
                 <textarea

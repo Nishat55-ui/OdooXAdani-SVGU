@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Calendar = () => {
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date(2024, 0, 1)); // January 2024
   const [userName, setUserName] = useState('User');
 
@@ -201,7 +203,9 @@ const Calendar = () => {
                   →
                 </button>
               </div>
-              <button style={{
+              <button 
+                onClick={() => router.push('/maintenance/new')}
+                style={{
                 padding: '10px 20px',
                 backgroundColor: '#714B67',
                 color: '#fff',

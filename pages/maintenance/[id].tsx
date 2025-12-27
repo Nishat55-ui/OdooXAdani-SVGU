@@ -34,16 +34,16 @@ const MaintenanceDetail = () => {
   const [editData, setEditData] = useState<MaintenanceRequest | null>(null);
 
   const teams = [
-    { name: 'Internal Maintenance', technicians: ['Mitchell Admin', 'Aka Foster', 'John Smith'] },
-    { name: 'Metrology', technicians: ['Marc Demo', 'Sarah Johnson', 'Mike Davis'] },
-    { name: 'Subcontractor', technicians: ['David Lee', 'Emma Wilson', 'Robert Brown'] },
+    { name: 'Internal Maintenance', technicians: ['Rajesh Kumar', 'Priya Singh', 'Amit Patel'] },
+    { name: 'Metrology', technicians: ['Vikram Sharma', 'Anjali Desai', 'Rohan Gupta'] },
+    { name: 'Subcontractor', technicians: ['Deepak Kumar', 'Neha Singh', 'Arjun Reddy'] },
   ];
 
   const equipmentOptions = [
-    { id: 'EQ-001', name: 'Samsung Monitor 15"', category: 'Monitors' },
-    { id: 'EQ-002', name: 'Acer Laptop', category: 'Computers' },
-    { id: 'EQ-003', name: 'Dell Desktop', category: 'Computers' },
-    { id: 'EQ-004', name: 'HP Printer', category: 'Printers' },
+    { id: 'EQ-001', name: 'Dell Desktop', category: 'Computers' },
+    { id: 'EQ-002', name: 'Samsung Monitor', category: 'Monitors' },
+    { id: 'EQ-003', name: 'HP LaserJet Printer', category: 'Printers' },
+    { id: 'EQ-004', name: 'CNC Machine 01', category: 'Industrial' },
   ];
 
   const companies = [
@@ -68,29 +68,55 @@ const MaintenanceDetail = () => {
   }, []);
 
   useEffect(() => {
-    // Mock data - in production this would come from an API
-    const mockRequest: MaintenanceRequest = {
-      id: id as string || 'MR-001',
-      subject: 'Test activity',
-      status: 'New',
-      priority: 'Medium',
-      createdBy: 'Mitchell Admin',
-      team: 'Internal Maintenance',
-      maintenanceFor: 'Equipment',
-      equipment: 'Acer Laptop / LP/203/19281928',
-      technician: 'Aka Foster',
-      category: 'Computers',
-      duration: '00:00 hours',
-      requestDate: '12/18/2025',
-      scheduledDate: '12/28/2025 14:30',
-      maintenanceType: 'Corrective',
-      company: 'TechCorp Industries',
-      notes: '',
-      instructions: '',
-    };
-    setRequest(mockRequest);
-    setEditData(mockRequest);
+    if (id) {
+      fetchMaintenanceRequest();
+    }
   }, [id]);
+
+  const getNumericId = (idString: string | string[] | undefined) => {
+    if (!idString) return null;
+    const idStr = Array.isArray(idString) ? idString[0] : idString;
+    // Extract numeric part from "MR-3" format
+    const numericMatch = idStr.match(/\d+/);
+    return numericMatch ? numericMatch[0] : idStr;
+  };
+
+  const fetchMaintenanceRequest = async () => {
+    try {
+      const numericId = getNumericId(id);
+      if (!numericId) {
+        throw new Error('Invalid ID');
+      }
+      const response = await fetch(`/api/maintenance/${numericId}`);
+      const data = await response.json();
+      setRequest(data);
+      setEditData(data);
+    } catch (error) {
+      console.error('Error fetching maintenance request:', error);
+      // Fall back to mock data if API fails
+      const mockRequest: MaintenanceRequest = {
+        id: id as string || 'MR-001',
+        subject: 'Test activity',
+        status: 'New',
+        priority: 'Medium',
+        createdBy: 'Mitchell Admin',
+        team: 'Internal Maintenance',
+        maintenanceFor: 'Equipment',
+        equipment: 'Acer Laptop / LP/203/19281928',
+        technician: 'Aka Foster',
+        category: 'Computers',
+        duration: '00:00 hours',
+        requestDate: '12/18/2025',
+        scheduledDate: '12/28/2025 14:30',
+        maintenanceType: 'Corrective',
+        company: 'TechCorp Industries',
+        notes: '',
+        instructions: '',
+      };
+      setRequest(mockRequest);
+      setEditData(mockRequest);
+    }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -155,10 +181,32 @@ const MaintenanceDetail = () => {
     return team ? team.technicians : [];
   };
 
-  const handleSave = () => {
-    if (editData) {
-      setRequest(editData);
-      setIsEditMode(false);
+  const handleSave = async () => {
+    if (editData && id) {
+      try {
+        const numericId = getNumericId(id);
+        if (!numericId) {
+          throw new Error('Invalid ID');
+        }
+        const response = await fetch(`/api/maintenance/${numericId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setRequest(data);
+          setIsEditMode(false);
+          alert('Maintenance request updated successfully!');
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error saving maintenance request:', error);
+        alert('Failed to save maintenance request');
+      }
     }
   };
 

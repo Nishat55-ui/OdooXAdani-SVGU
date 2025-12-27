@@ -16,39 +16,7 @@ interface Equipment {
 
 const Equipment = () => {
   const [userName, setUserName] = useState('User');
-  const [equipmentList, setEquipmentList] = useState<Equipment[]>([
-    {
-      id: 'EQ-001',
-      name: "Samsung Monitor 15\"",
-      employee: 'Tejas Modi',
-      department: 'Admin',
-      serialNumber: 'MT/125/22778837',
-      technician: 'Mitchell Admin',
-      category: 'Monitors',
-      company: 'Precision Manufacturing Ltd',
-    },
-    {
-      id: 'EQ-002',
-      name: 'Acer Laptop',
-      employee: 'Bhaumik P',
-      department: 'Technician',
-      serialNumber: 'MT/122/11112222',
-      technician: 'Marc Demo',
-      category: 'Computers',
-      company: 'Global Solutions Inc',
-    },
-    {
-      id: 'EQ-003',
-      name: 'Dell Desktop',
-      employee: 'John Smith',
-      department: 'IT',
-      serialNumber: 'MT/150/33334444',
-      technician: 'Aka Foster',
-      category: 'Computers',
-      company: 'Advanced Systems Corp',
-    },
-  ]);
-
+  const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -61,7 +29,22 @@ const Equipment = () => {
         setUserName('User');
       }
     }
+
+    // Fetch equipment from API
+    fetchEquipment();
   }, []);
+
+  const fetchEquipment = async () => {
+    try {
+      const response = await fetch('/api/equipment');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setEquipmentList(data);
+      }
+    } catch (error) {
+      console.error('Error fetching equipment:', error);
+    }
+  };
 
   const filteredEquipment = equipmentList.filter((eq) =>
     eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

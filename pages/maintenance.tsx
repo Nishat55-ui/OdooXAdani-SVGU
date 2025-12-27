@@ -17,16 +17,7 @@ interface MaintenanceRequest {
 
 const Maintenance = () => {
   const [userName, setUserName] = useState('User');
-  const [requests, setRequests] = useState<MaintenanceRequest[]>([
-    { id: 'MR-001', title: 'Printer Paper Jam', equipment: 'HP LaserJet Pro', status: 'New', type: 'Corrective', date: '2024-01-18' },
-    { id: 'MR-002', title: 'Monthly Checkup', equipment: 'CNC Machine 01', status: 'New', type: 'Preventive', date: '2024-01-20' },
-    { id: 'MR-003', title: 'Filter Replacement', equipment: 'Air Compressor', status: 'New', type: 'Preventive', date: '2024-01-22' },
-    { id: 'MR-004', title: 'Server Room AC Failure', equipment: 'HVAC Unit 03', status: 'In Progress', type: 'Corrective', date: '2024-01-15' },
-    { id: 'MR-005', title: 'Belt Replacement', equipment: 'Conveyor Belt 01', status: 'In Progress', type: 'Corrective', date: '2024-01-12' },
-    { id: 'MR-006', title: 'Oil Change', equipment: 'Forklift 02', status: 'Repaired', type: 'Preventive', date: '2024-01-10' },
-    { id: 'MR-007', title: 'Firmware Update', equipment: 'Dell Server R740', status: 'Repaired', type: 'Preventive', date: '2024-01-19' },
-    { id: 'MR-008', title: 'Motor Burnout', equipment: 'Industrial Press', status: 'Scrap', type: 'Corrective', date: '2024-01-05' },
-  ]);
+  const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -38,7 +29,33 @@ const Maintenance = () => {
         setUserName('User');
       }
     }
+
+    // Fetch maintenance requests from API
+    fetchRequests();
   }, []);
+
+  const fetchRequests = async () => {
+    try {
+      const response = await fetch('/api/maintenance');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        // Map database format to UI format
+        const mappedRequests = data.map((req: any) => ({
+          id: `MR-${req.id}`,
+          title: req.subject,
+          equipment: req.equipment || req.workCenter || 'Unknown',
+          status: req.status || 'New',
+          type: req.maintenanceType || 'Preventive',
+          date: req.requestDate,
+          team: req.team,
+          priority: req.priority,
+        }));
+        setRequests(mappedRequests);
+      }
+    } catch (error) {
+      console.error('Error fetching maintenance requests:', error);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -15,26 +15,7 @@ const Teams = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('User');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [teams, setTeams] = useState<Team[]>([
-    {
-      id: 'TEAM-001',
-      name: 'Internal Maintenance',
-      members: ['Anas Makari', 'Mitchell Admin', 'Aka Foster'],
-      company: 'TechCorp Industries',
-    },
-    {
-      id: 'TEAM-002',
-      name: 'Metrology',
-      members: ['Marc Demo', 'Sarah Johnson', 'Mike Davis'],
-      company: 'Precision Manufacturing Ltd',
-    },
-    {
-      id: 'TEAM-003',
-      name: 'Subcontractor',
-      members: ['Maggie Davidson', 'David Lee', 'Emma Wilson'],
-      company: 'Global Solutions Inc',
-    },
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -46,7 +27,22 @@ const Teams = () => {
         setUserName('User');
       }
     }
+
+    // Fetch teams from API
+    fetchTeams();
   }, []);
+
+  const fetchTeams = async () => {
+    try {
+      const response = await fetch('/api/teams');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setTeams(data);
+      }
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+    }
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f5f5f5' }}>

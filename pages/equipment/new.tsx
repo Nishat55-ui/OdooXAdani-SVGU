@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 const NewEquipment = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('User');
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -25,8 +26,8 @@ const NewEquipment = () => {
   const categories = ['Computers', 'Monitors', 'Printers', 'Network Equipment', 'Power Equipment', 'Cooling Equipment', 'Other'];
   const teams = ['Internal Maintenance', 'Metrology', 'Subcontractor'];
   const companies = ['TechCorp Industries', 'Precision Manufacturing Ltd', 'Global Solutions Inc', 'Advanced Systems Corp', 'Innovation Labs', 'Digital Enterprises'];
-  const employees = ['Mitchell Admin', 'Aka Foster', 'John Smith', 'Marc Demo', 'Sarah Johnson', 'Abigail Peterson'];
-  const technicians = ['Mitchell Admin', 'Aka Foster', 'John Smith', 'Marc Demo', 'Sarah Johnson', 'David Lee'];
+  const employees = ['Rajesh Kumar', 'Priya Singh', 'Amit Patel', 'Vikram Sharma', 'Anjali Desai', 'Rohan Gupta'];
+  const technicians = ['Rajesh Kumar', 'Priya Singh', 'Amit Patel', 'Vikram Sharma', 'Anjali Desai', 'Deepak Kumar'];
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -50,9 +51,48 @@ const NewEquipment = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('New Equipment:', formData);
-    router.push('/equipment');
+    
+    // Validation
+    if (!formData.name.trim()) {
+      alert('Equipment name is required');
+      return;
+    }
+    if (!formData.category) {
+      alert('Category is required');
+      return;
+    }
+
+    setLoading(true);
+
+    // Submit to API
+    fetch('/api/equipment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        code: formData.name,
+        category: formData.category,
+        status: 'Operational',
+        location: formData.usedInLocation,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          alert(`Error: ${data.error}`);
+          setLoading(false);
+        } else {
+          alert(`Equipment "${data.name}" created successfully!`);
+          router.push('/equipment');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to create equipment');
+        setLoading(false);
+      });
   };
 
   return (
@@ -157,7 +197,7 @@ const NewEquipment = () => {
                   {/* Name */}
                   <div style={{ marginBottom: '25px' }}>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                      Name?
+                      Name<span style={{ color: '#e74c3c' }}>*</span>
                     </label>
                     <input
                       type="text"
@@ -181,7 +221,7 @@ const NewEquipment = () => {
                   {/* Equipment Category */}
                   <div style={{ marginBottom: '25px' }}>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '8px' }}>
-                      Equipment Category?
+                      Equipment Category<span style={{ color: '#e74c3c' }}>*</span>
                     </label>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <select

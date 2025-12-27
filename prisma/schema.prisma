@@ -32,3 +32,56 @@ model WorkCenter {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Equipment {
+  id    Int     @id @default(autoincrement())
+  name  String
+  code  String  @unique
+  category String @default("Uncategorized")
+  status String @default("Operational")
+  location String?
+  lastMaintenanceDate DateTime?
+  nextMaintenanceDate DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id    Int     @id @default(autoincrement())
+  name  String
+  members String
+  company String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MaintenanceRequest {
+  id    Int     @id @default(autoincrement())
+  subject String
+  status String @default("New")
+  priority String @default("Medium")
+  createdBy String
+  team String
+  maintenanceFor String @default("Equipment")
+  equipment String?
+  workCenter String?
+  technician String
+  category String
+  duration String @default("00:00 hours")
+  requestDate String
+  scheduledDate String?
+  maintenanceType String @default("Corrective")
+  company String
+  notes String?
+  instructions String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
